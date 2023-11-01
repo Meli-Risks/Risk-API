@@ -21,7 +21,7 @@ jwt = JWTManager(app)
 # Enable CORS (Cross-Origin Resource Sharing) for the application
 CORS(app, resources={
     r"/*": {
-        "origins": ["*"],
+        "origins": ["https://smart-risk.tech", "http://smart-risk.tech", "http://localhost:3000"],
         "methods": ["OPTIONS", "GET", "POST", "PUT", "DELETE"],
         "allow_headers": ["Content-Type", "Authorization"],
         "expose_headers": ["Content-Type"],
