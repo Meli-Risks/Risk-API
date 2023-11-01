@@ -44,7 +44,7 @@ def create_risk():
     new_risk = risk_use_case.create_risk(data, user_id)
     risk_id = str(new_risk['id'])
     return jsonify(success_operation_response(
-        201, new_risk, "Risk created successfully with ID " + risk_id)), 201
+        201, new_risk, "Riesgo con ID " + risk_id + " creado exitosamente")), 201
 
 
 @bp.route('/api/v1/risks/<int:risk_id>', methods=['PUT'])
@@ -61,7 +61,7 @@ def update_risk(risk_id):
     user_id = get_jwt().get('user')['userId']
     updated_risk = risk_use_case.update_risk(data, risk_id, user_id)
     return jsonify(success_operation_response(
-        200, updated_risk, "Risk updated successfully")), 200
+        200, updated_risk, "Riesgo actualizado exitosamente")), 200
 
 
 @bp.route('/api/v1/risks/<int:risk_id>', methods=['DELETE'])
@@ -76,4 +76,4 @@ def delete_risk(risk_id):
     """
     user_id = get_jwt().get('user')['userId']
     risk_use_case.delete_risk(risk_id, user_id)
-    return jsonify(success_response(200, "Risk deleted successfully")), 200
+    return jsonify(success_response(200, "Riesgo eliminado exitosamente")), 200

@@ -40,7 +40,7 @@ def create_provider():
     new_provider = provider_use_case.create_provider(data)
     provider_id = str(new_provider['id'])
     return jsonify(success_operation_response(
-        201, new_provider, "Provider created successfully with ID " + provider_id)), 201
+        201, new_provider, "Proveedor con ID " + provider_id + " creado exitosamente")), 201
 
 
 @bp.route('/api/v1/providers/<int:provider_id>', methods=['PUT'])
@@ -55,7 +55,7 @@ def update_provider(provider_id):
     data = request.get_json()
     updated_provider = provider_use_case.update_provider(data, provider_id)
     return jsonify(success_operation_response(
-        200, updated_provider, "Provider updated successfully")), 200
+        200, updated_provider, "Proveedor actualizado exitosamente")), 200
 
 
 @bp.route('/api/v1/providers/<int:provider_id>', methods=['DELETE'])
@@ -68,4 +68,4 @@ def delete_provider(provider_id):
     :return: A response indicating the successful deletion of the provider.
     """
     provider_use_case.delete_provider(provider_id)
-    return jsonify(success_response(200, "Provider deleted successfully")), 200
+    return jsonify(success_response(200, "Proveedor eliminado exitosamente")), 200
