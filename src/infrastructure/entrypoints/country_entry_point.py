@@ -38,7 +38,7 @@ def get_countries_by_codes():
     country_codes = request.args.getlist('codes')
 
     if not country_codes:
-        return jsonify({"message": "No country codes provided"})
+        return jsonify({"message": "No se proporcionaron códigos de países"})
 
     api_data = country_use_case.get_countries_by_codes(country_codes)
 
