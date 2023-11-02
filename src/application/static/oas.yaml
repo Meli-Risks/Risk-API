@@ -1,0 +1,360 @@
+openapi: 3.0.3
+info:
+  title: API Risk management
+  description: |-
+    This API allow to manage Risks of different providers.
+  contact:
+    email: jaidernico408@gmail.com
+  license:
+    name: MIT
+    url: https://mit-license.org/
+  version: 1.0.0
+externalDocs:
+  description: Find out more about the project
+  url: https://github.com/Meli-Risks/Risk-Documentation
+servers:
+  - url: https://smart-risk.tech/api/v1
+  - url: http://localhost:5000/api/v1
+tags:
+  - name: Auth
+    description: Authentication
+  - name: Providers
+    description: Provider management
+  - name: Risks
+    description: Risk management
+  - name: Countries
+    description: Countries list
+paths:
+  /providers:
+    get:
+      tags:
+        - Providers
+      summary: Find providers with filtering and sorting
+      description: Find providers with filtering and sorting
+      operationId: findProviders
+      parameters:
+        - name: pageNumber
+          in: query
+          description: Page number to retrieve
+          example: 1
+          required: false
+          schema:
+            type: number
+        - name: pageSize
+          in: query
+          description: Element size to retrieve
+          example: 10
+          required: false
+          schema:
+            type: number
+        - name: orderBy
+          in: query
+          description: Field by which to sort
+          required: false
+          schema:
+            type: string
+            enum: [name, id]
+        - name: orderType
+          in: query
+          description: Sort type
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+        - name: name
+          in: query
+          description: Filter to search by provider name
+          required: false
+          example: Alkosto
+          schema:
+            type: string
+        - name: id
+          in: query
+          description: Filter to search by provider id
+          required: false
+          example: 1
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSucessDataResponseProvider'
+      security:
+        - bearerAuth: []
+
+    post:
+      tags:
+        - Providers
+      summary: Create a provider
+      description: Create a provider
+      operationId: createProvider
+      requestBody:
+        description: Create a provider
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProviderRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSucessResponseProvider'
+              example:
+                code: 200
+                message: Proveedor creado exitosamente
+                data: {countries: [CO,FR,MX,CL], id: 30, name: "Ktronix"}
+        '400':
+          description: Invalid input supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                code: 400
+                message: Error validando campos de entrada
+        '422':
+          description: Business validation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                code: 422
+                message: Algunos codigos de paises no existen
+  /providers/{providerId}:
+    put:
+      tags:
+        - Providers
+      summary: Update an existing provider
+      description: Update an existing provider by Id
+      operationId: updateProvider
+      parameters:
+        - name: providerId
+          in: path
+          description: Provider id to update
+          required: true
+          schema:
+            type: number
+      requestBody:
+        description: Update an existent provider
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProviderUpdateRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSucessResponseProvider'
+              example:
+                code: 200
+                message: Proveedor actualizado exitosamente
+                data: {countries: [CO,BR,MX,US], id: 32, name: "Alkosto"}
+        '400':
+          description: Invalid input supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                code: 400
+                message: Error validando campos de entrada
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                code: 404
+                message: Proveedor no encontrado
+        '422':
+          description: Business validation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                code: 422
+                message: Algunos codigos de paises no existen
+      security:
+        - bearerAuth: []
+
+    delete:
+      tags:
+        - Providers
+      summary: Delete an existing provider
+      description: Delete an existing provider by Id
+      operationId: deleteProvider
+      parameters:
+        - name: providerId
+          in: path
+          description: Provider id to update
+          required: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSucessResponseProvider'
+              example:
+                code: 200
+                message: Proveedor eliminado exitosamente
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                code: 404
+                message: Proveedor no encontrado
+      security:
+        - bearerAuth: []
+
+components:
+  schemas:
+    CountryResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          example: CO
+        flag:
+          type: string
+          example: 🇨🇴
+        name:
+          type: string
+          example: Colombia
+    ProviderBasicResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: Amazon Web Services
+        countries:
+          type: array
+          example: [CO,BR,MX]
+          items:
+            type: string
+    ProviderResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: Amazon Web Services
+        countries:
+          type: array
+          items:
+            $ref: '#/components/schemas/CountryResponse'
+    ProviderRequest:
+      type: object
+      required:
+        - name
+        - countryCodes
+      properties:
+        name:
+          type: string
+          example: Amazon Web Services
+        countryCodes:
+          type: array
+          example: [CO,BR,MX]
+          items:
+            type: string
+    ProviderUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Amazon Web Services
+        countryCodes:
+          type: array
+          example: [CO,BR,MX]
+          items:
+            type: string
+      anyOf:
+        - required: ['name']
+        - required: ['countryCodes']
+
+    PageableProviderResponse:
+      type: object
+      properties:
+        pageNumber:
+          type: number
+          example: 1
+        pageSize:
+          type: number
+          example: 10
+        totalPages:
+          type: number
+          example: 3
+        totalRecords:
+          type: number
+          example: 27
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProviderResponse'
+
+    ApiSucessResponseProvider:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/ProviderBasicResponse'
+    ApiSucessDataResponseProvider:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          type: string
+          example: Consulta exitosa
+        data:
+          $ref: '#/components/schemas/PageableProviderResponse'
+    ApiErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+  requestBodies:
+    UserArray:
+      description: List of user object
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ProviderRequest'
+  securitySchemes:
+    bearerAuth:
+      type: "http"
+      scheme: "bearer"
+      bearerFormat: "JWT"

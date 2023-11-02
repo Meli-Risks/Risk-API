@@ -1,3 +1,4 @@
+from flasgger import Swagger
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
@@ -21,13 +22,16 @@ jwt = JWTManager(app)
 # Enable CORS (Cross-Origin Resource Sharing) for the application
 CORS(app, resources={
     r"/*": {
-        "origins": ["*"],
+        "origins": ["https://smart-risk.tech", "http://smart-risk.tech", "http://localhost:3000",
+                    "http://localhost:5000"],
         "methods": ["OPTIONS", "GET", "POST", "PUT", "DELETE"],
         "allow_headers": ["Content-Type", "Authorization"],
         "expose_headers": ["Content-Type"],
         "supports_credentials": True
     }
 })
+
+swagger = Swagger(app, template_file='static/oas.yaml')
 
 from src.infrastructure.entrypoints import auth_entry_point, country_entry_point
 from src.infrastructure.entrypoints import risk_entry_point, provider_entry_point
@@ -42,7 +46,12 @@ def add_security_headers(response):
     :return: The response with added security headers.
     """
 
-    response.headers['Content-Security-Policy'] = "default-src 'self'"
+    response.headers[
+        'Content-Security-Policy'] = ("default-src 'self'; connect-src 'self' https://smart-risk.tech "
+                                      "http://localhost:5000; script-src 'self' 'unsafe-inline'; style-src 'self' "
+                                      "'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; "
+                                      "font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; "
+                                      "img-src 'self' data:")
     response.headers['Strict-Transport-Security'] = "max-age=31536000; includeSubDomains"
     response.headers['X-Content-Type-Options'] = "nosniff"
     response.headers['X-Frame-Options'] = "DENY"

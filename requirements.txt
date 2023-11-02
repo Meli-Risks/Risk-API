@@ -26,3 +26,4 @@ typing_extensions==4.8.0
 urllib3==2.0.7
 Werkzeug==3.0.1
 zipp==3.17.0
+flasgger~=0.9.7.2.dev2
