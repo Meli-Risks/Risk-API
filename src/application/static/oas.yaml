@@ -25,6 +25,100 @@ tags:
   - name: Countries
     description: Countries list
 paths:
+  /login:
+    post:
+      tags:
+        - Auth
+      summary: Login to system
+      description: Authenticate to system
+      operationId: login
+      requestBody:
+        description: Login request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                code: 401
+                message: Usuario o contrase;a invalidos
+  /logout:
+    post:
+      tags:
+        - Auth
+      summary: Logout to system
+      description: Logout to the system
+      operationId: logout
+      responses:
+        '204':
+          description: Successful operation
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                code: 401
+                message: Token expirado
+      security:
+        - bearerAuth: []
+
+  /countries/all:
+    get:
+      tags:
+        - Countries
+      summary: Find all countries
+      description: Find all countries
+      operationId: findCountries
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSucessDataResponseCountry'
+      security:
+        - bearerAuth: []
+  /countries:
+    get:
+      tags:
+        - Countries
+      summary: Find countries by country codes
+      description: Find all countries by country codes
+      operationId: findCountriesByCodes
+      parameters:
+        - name: codes
+          in: query
+          description: Code of countries
+          example: ["CO", "BR"]
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSucessDataResponseCountry'
+      security:
+        - bearerAuth: []
+
   /providers:
     get:
       tags:
@@ -126,6 +220,8 @@ paths:
               example:
                 code: 422
                 message: Algunos codigos de paises no existen
+      security:
+        - bearerAuth: []
   /providers/{providerId}:
     put:
       tags:
@@ -222,8 +318,251 @@ paths:
       security:
         - bearerAuth: []
 
+  /risks:
+    get:
+      tags:
+        - Risks
+      summary: Find risks with filtering and sorting
+      description: Find risks with filtering and sorting
+      operationId: findRisks
+      parameters:
+        - name: pageNumber
+          in: query
+          description: Page number to retrieve
+          example: 1
+          required: false
+          schema:
+            type: number
+        - name: pageSize
+          in: query
+          description: Element size to retrieve
+          example: 10
+          required: false
+          schema:
+            type: number
+        - name: orderBy
+          in: query
+          description: Field by which to sort
+          required: false
+          schema:
+            type: string
+            enum: [name, id]
+        - name: orderType
+          in: query
+          description: Sort type
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+        - name: title
+          in: query
+          description: Filter to search by risk title
+          required: false
+          schema:
+            type: string
+        - name: description
+          in: query
+          description: Filter to search by risk description
+          required: false
+          schema:
+            type: string
+        - name: impact
+          in: query
+          description: Filter to search by risk impact
+          required: false
+          schema:
+            type: number
+        - name: probability
+          in: query
+          description: Filter to search by risk probability
+          required: false
+          schema:
+            type: number
+        - name: country.code
+          in: query
+          description: Filter to search by risk country code
+          required: false
+          schema:
+            type: string
+        - name: provider.id
+          in: query
+          description: Filter to search by risk provider id
+          required: false
+          schema:
+            type: number
+        - name: provider.name
+          in: query
+          description: Filter to search by risk provider name
+          required: false
+          schema:
+            type: string
+        - name: globalFilter
+          in: query
+          description: Filter to search by a global filer
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSucessDataResponseRisk'
+      security:
+        - bearerAuth: []
+
+    post:
+      tags:
+        - Risks
+      summary: Create a risk
+      description: Create a risk
+      operationId: createRisk
+      requestBody:
+        description: Create a risk
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RiskRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSucessResponseRisk'
+        '400':
+          description: Invalid input supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                code: 400
+                message: Error validando campos de entrada
+        '422':
+          description: Business validation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                code: 422
+                message: Algunos codigos de paises no existen
+      security:
+        - bearerAuth: []
+  /risks/{riskId}:
+    put:
+      tags:
+        - Risks
+      summary: Update an existing risk
+      description: Update an existing risk by Id
+      operationId: updateRisk
+      parameters:
+        - name: riskId
+          in: path
+          description: Risk id to update
+          required: true
+          schema:
+            type: number
+      requestBody:
+        description: Update an existent risk
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RiskUpdateRequest'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSucessResponseRisk'
+        '400':
+          description: Invalid input supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                code: 400
+                message: Error validando campos de entrada
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                code: 404
+                message: Riesgo no encontrado
+        '422':
+          description: Business validation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                code: 422
+                message: Algunos codigos de paises no existen
+      security:
+        - bearerAuth: []
+
+    delete:
+      tags:
+        - Risks
+      summary: Delete an existing risk
+      description: Delete an existing risk by Id
+      operationId: deleteRisk
+      parameters:
+        - name: riskId
+          in: path
+          description: Risk id to update
+          required: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSucessResponseRisk'
+              example:
+                code: 200
+                message: Riesgo eliminado exitosamente
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                code: 404
+                message: Riesgo no encontrado
+      security:
+        - bearerAuth: []
+
+
 components:
   schemas:
+    LoginRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        usernmame:
+          type: string
+        password:
+          type: string
+    LoginResponse:
+      type: object
+      properties:
+        accesToken:
+          type: string
+        refreshToken:
+          type: string
     CountryResponse:
       type: object
       properties:
@@ -236,6 +575,113 @@ components:
         name:
           type: string
           example: Colombia
+    RiskResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        title:
+          type: string
+          example: Riesgo de seguridad de datos
+        description:
+          type: string
+          example: Posible brecha de seguridad
+        impact:
+          type: number
+          example: 2
+        probabiblity:
+          type: number
+          example: 3
+        provider:
+            $ref: '#/components/schemas/ProviderSlimResponse'
+        country:
+            $ref: '#/components/schemas/CountryResponse'
+    RiskBasicResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        title:
+          type: string
+          example: Riesgo de seguridad de datos
+        description:
+          type: string
+          example: Posible brecha de seguridad
+        impact:
+          type: number
+          example: 2
+        probabiblity:
+          type: number
+          example: 3
+        providerId:
+          type: number
+          example: 3
+        countryCode:
+          type: string
+          example: CO
+    RiskRequest:
+      type: object
+      required:
+        - title
+        - description
+        - impact
+        - probabiblity
+        - providerId
+        - countryCode
+      properties:
+        title:
+          type: string
+          example: Riesgo de seguridad de datos
+        description:
+          type: string
+          example: Posible brecha de seguridad
+        impact:
+          type: number
+          example: 2
+        probabiblity:
+          type: number
+          example: 3
+        providerId:
+          type: number
+          example: 3
+        countryCode:
+          type: string
+          example: CO
+    RiskUpdateRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Riesgo de seguridad de datos
+        description:
+          type: string
+          example: Posible brecha de seguridad
+        impact:
+          type: number
+          example: 2
+        probabiblity:
+          type: number
+          example: 3
+        providerId:
+          type: number
+          example: 3
+        countryCode:
+          type: string
+          example: CO
+    ProviderSlimResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 4
+        name:
+          type: string
+          example: Amazon Web Services
     ProviderBasicResponse:
       type: object
       properties:
@@ -313,6 +759,25 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ProviderResponse'
+    PageableRiskResponse:
+      type: object
+      properties:
+        pageNumber:
+          type: number
+          example: 1
+        pageSize:
+          type: number
+          example: 10
+        totalPages:
+          type: number
+          example: 3
+        totalRecords:
+          type: number
+          example: 27
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/RiskResponse'
 
     ApiSucessResponseProvider:
       type: object
@@ -324,6 +789,16 @@ components:
           type: string
         data:
           $ref: '#/components/schemas/ProviderBasicResponse'
+    ApiSucessResponseRisk:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/RiskBasicResponse'
     ApiSucessDataResponseProvider:
       type: object
       properties:
@@ -336,6 +811,32 @@ components:
           example: Consulta exitosa
         data:
           $ref: '#/components/schemas/PageableProviderResponse'
+    ApiSucessDataResponseRisk:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          type: string
+          example: Consulta exitosa
+        data:
+          $ref: '#/components/schemas/PageableRiskResponse'
+    ApiSucessDataResponseCountry:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          type: string
+          example: Consulta exitosa
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CountryResponse'
     ApiErrorResponse:
       type: object
       properties:
