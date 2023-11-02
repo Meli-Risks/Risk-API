@@ -552,14 +552,14 @@ components:
         - username
         - password
       properties:
-        usernmame:
+        username:
           type: string
         password:
           type: string
     LoginResponse:
       type: object
       properties:
-        accesToken:
+        accessToken:
           type: string
         refreshToken:
           type: string
@@ -591,7 +591,7 @@ components:
         impact:
           type: number
           example: 2
-        probabiblity:
+        probability:
           type: number
           example: 3
         provider:
@@ -614,7 +614,7 @@ components:
         impact:
           type: number
           example: 2
-        probabiblity:
+        probability:
           type: number
           example: 3
         providerId:
@@ -629,7 +629,7 @@ components:
         - title
         - description
         - impact
-        - probabiblity
+        - probability
         - providerId
         - countryCode
       properties:
@@ -642,7 +642,7 @@ components:
         impact:
           type: number
           example: 2
-        probabiblity:
+        probability:
           type: number
           example: 3
         providerId:
@@ -650,7 +650,7 @@ components:
           example: 3
         countryCode:
           type: string
-          example: CO
+          example: MX
     RiskUpdateRequest:
       type: object
       properties:
@@ -663,15 +663,15 @@ components:
         impact:
           type: number
           example: 2
-        probabiblity:
+        probability:
           type: number
           example: 3
         providerId:
           type: number
-          example: 3
+          example: 1
         countryCode:
           type: string
-          example: CO
+          example: AR
     ProviderSlimResponse:
       type: object
       properties:
