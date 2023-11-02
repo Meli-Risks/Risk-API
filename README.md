@@ -20,14 +20,20 @@
     source venv/bin/activate
     pip install -r requirements.txt
     ``
+4. Es esencial establecer una base de datos PostgreSQL e implementar el DDL que se encuentra en el directorio 
+`/src/application/static/ddl.sql`. Además, es necesario que se haya configurado previamente una base de datos Redis.
 
-4. Ejecuta la aplicación:
+5. Es necesario que configure las variables de entorno en un archivo .env. Esto incluye la conexión a la base de 
+datos PostgreSQL, Redis y el secreto JWT. En la raíz del proyecto, encontrará un archivo .env.example que le servirá
+como guía para la definición local de las variables de entorno.
+
+6. Ejecuta la aplicación:
 
     ``
     FLASK_APP=run.py FLASK_ENV=development python -m flask run
     ``
 
-5. La aplicación Flask ahora debería estar desplegada en http://localhost:5000.
+7. La aplicación Flask ahora debería estar desplegada en http://localhost:5000.
 
 ## Despliegue con Docker
 
@@ -42,8 +48,11 @@ Asegúrese de estar en el directorio del proyecto donde se encuentra el Dockerfi
 2. Corre el contenedor de Docker:
 
     ``
-    docker run -p 5000:5000 <nombre_de_la_imagen>
+    docker run -e JWT_SECRET_KEY=<valor> -e CONNECTION_STRING=<valor> -e REDIS_HOST=<valor> -e REDIS_PASSWORD=<valor> -p 5000:5000 <nombre_de_la_imagen>
     ``
+
+    Por favor, reemplace <valor> con los valores reales para cada variable de entorno y <nombre_de_la_imagen> con el nombre 
+    real de su imagen Docker.
 
 3. Ahora, la aplicación Flask debería estar desplegada en http://localhost:5000.
 
