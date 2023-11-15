@@ -39,26 +39,6 @@ COMMENT ON TABLE user_roles IS 'Table to establish relationships between users a
 COMMENT ON COLUMN user_roles.user_id IS 'User ID';
 COMMENT ON COLUMN user_roles.role_id IS 'Role ID';
 
-CREATE TABLE risks (
-    id serial PRIMARY KEY,
-    title VARCHAR(100) NOT NULL,
-    description TEXT,
-    impact INTEGER,
-    probability INTEGER,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    country_code VARCHAR(2) NOT NULL
-);
-
--- Add comments to describe tables and columns
-COMMENT ON TABLE risks IS 'Table to store information about cybersecurity risks';
-COMMENT ON COLUMN risks.id IS 'Unique risk ID';
-COMMENT ON COLUMN risks.title IS 'Risk title';
-COMMENT ON COLUMN risks.description IS 'Risk description';
-COMMENT ON COLUMN risks.impact IS 'Risk impact';
-COMMENT ON COLUMN risks.probability IS 'Risk probability';
-COMMENT ON COLUMN risks.user_id IS 'User who created the risk';
-COMMENT ON COLUMN risks.country_code IS 'Country code associated with the risk';
-
 CREATE TABLE providers (
     id serial PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -73,3 +53,44 @@ COMMENT ON COLUMN providers.country_codes IS 'Array of country codes associated 
 
 -- Sample Data Insertion (DML)
 -- Insert user roles, and other data as needed
+
+CREATE TABLE risks (
+    id serial PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    description TEXT,
+    impact INTEGER,
+    probability INTEGER,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    provider_id INTEGER REFERENCES providers(id) ON DELETE CASCADE,
+    country_code VARCHAR(2) NOT NULL
+);
+
+-- Add comments to describe tables and columns
+COMMENT ON TABLE risks IS 'Table to store information about cybersecurity risks';
+COMMENT ON COLUMN risks.id IS 'Unique risk ID';
+COMMENT ON COLUMN risks.title IS 'Risk title';
+COMMENT ON COLUMN risks.description IS 'Risk description';
+COMMENT ON COLUMN risks.impact IS 'Risk impact';
+COMMENT ON COLUMN risks.probability IS 'Risk probability';
+COMMENT ON COLUMN risks.user_id IS 'User who created the risk';
+COMMENT ON COLUMN risks.country_code IS 'Country code associated with the risk';
+
+CREATE TABLE risk_treatments (
+    id serial PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description VARCHAR(500) NOT NULL,
+    constraints VARCHAR(200) NOT NULL,
+    start_date TIMESTAMP,
+    final_date TIMESTAMP,
+    risk_id INTEGER REFERENCES risks(id) ON DELETE CASCADE
+);
+
+-- Add comments to describe tables and columns
+COMMENT ON TABLE risk_treatments IS 'Table to store information about the treatment of cybersecurity risks';
+COMMENT ON COLUMN risk_treatments.id IS 'Unique risk treatment ID';
+COMMENT ON COLUMN risk_treatments.name IS 'Name of the risk treatment';
+COMMENT ON COLUMN risk_treatments.description IS 'Detailed description of the risk treatment';
+COMMENT ON COLUMN risk_treatments.constraints IS 'Constraints or limitations associated with the risk treatment';
+COMMENT ON COLUMN risk_treatments.start_date IS 'Start date of the risk treatment implementation';
+COMMENT ON COLUMN risk_treatments.final_date IS 'End date of the risk treatment implementation';
+COMMENT ON COLUMN risk_treatments.risk_id IS 'ID of the associated risk in the risks table';
