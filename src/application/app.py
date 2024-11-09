@@ -23,7 +23,8 @@ jwt = JWTManager(app)
 CORS(app, resources={
     r"/*": {
         "origins": ["https://smart-risk.tech", "http://smart-risk.tech", "http://localhost:3000",
-                    "http://localhost:5000"],
+                    "http://localhost:5000", "http://risk-management-jnpm.s3-website.us-east-2.amazonaws.com",
+                    "https://d3gjc525eyvl4t.cloudfront.net"],
         "methods": ["OPTIONS", "GET", "POST", "PUT", "DELETE"],
         "allow_headers": ["Content-Type", "Authorization"],
         "expose_headers": ["Content-Type"],

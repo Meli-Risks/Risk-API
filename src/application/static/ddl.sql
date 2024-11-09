@@ -94,3 +94,21 @@ COMMENT ON COLUMN risk_treatments.constraints IS 'Constraints or limitations ass
 COMMENT ON COLUMN risk_treatments.start_date IS 'Start date of the risk treatment implementation';
 COMMENT ON COLUMN risk_treatments.final_date IS 'End date of the risk treatment implementation';
 COMMENT ON COLUMN risk_treatments.risk_id IS 'ID of the associated risk in the risks table';
+
+CREATE TABLE countries (
+    id serial PRIMARY KEY,
+    cid int,
+    code VARCHAR(3) NOT NULL,
+    flag VARCHAR(50) NOT NULL,
+    name VARCHAR(200) NOT NULL
+);
+
+-- Add comments to describe tables and columns
+COMMENT ON TABLE countries IS 'Table to store information about the countries';
+COMMENT ON COLUMN countries.id IS 'Unique country ID';
+COMMENT ON COLUMN countries.cid IS 'Id of country';
+COMMENT ON COLUMN countries.code IS 'Code of the country';
+COMMENT ON COLUMN countries.name IS 'Name of the country';
+COMMENT ON COLUMN countries.flag IS 'Flag of the country';
+
+delete from countries where 1=1

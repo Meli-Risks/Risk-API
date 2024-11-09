@@ -1,15 +1,17 @@
 from src.domain.gateways.blacklist_gateway import IBlackListGateway
+from src.infrastructure.adapters.databases import redis_db
 
 
 class BlackListRepository(IBlackListGateway):
     """
-    Implementation of the IBlackListGateway interface empty
+    Implementation of the IBlackListGateway interface using a Redis database to manage token blacklisting.
     """
 
     def __init__(self):
         """
-        Initialize the BlackListRepository
+        Initialize the BlackListRepository with a connection to the Redis database.
         """
+        self.redis = redis_db
 
     def add_token_to_blacklist(self, jti, expires):
         """
@@ -20,6 +22,7 @@ class BlackListRepository(IBlackListGateway):
 
         :return: None if the token is successfully added to the blacklist.
         """
+        self.redis.setex(jti, expires, 'Revoked')
 
     def is_token_blacklisted(self, jti):
         """
@@ -29,4 +32,4 @@ class BlackListRepository(IBlackListGateway):
 
         :return: True if the token is blacklisted, False otherwise.
         """
-        return False
+        return self.redis.get(jti) is not None
