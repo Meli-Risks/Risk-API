@@ -114,6 +114,7 @@ var/
 wheels/
 share/python-wheels/
 *.egg-info/
+source
 .installed.cfg
 *.egg
 MANIFEST
