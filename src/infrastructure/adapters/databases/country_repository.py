@@ -63,8 +63,8 @@ class CountryRepository(ICountryGateway):
         """
         country_data = Country.query.all()
         result = {}
-        for code, data in country_data.items():
-            result[code.decode()] = data.to_dict()
+        for data in country_data:
+            result[data.code] = data.to_dict()
         return result
 
     def get_countries_data_by_codes(self, country_codes):
